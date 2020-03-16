@@ -1,0 +1,22 @@
+## /usr/lib/systemd/system/moodle.service
+
+[Unit]
+Description=Moodle service running in a docker container.
+Requires=docker.service
+After=postgres.service
+
+[Service]
+Restart=always
+SuccessExitStatus=2
+Environment=UNIT_NAME=moodle
+TimeoutSec=30
+
+ExecStartPre=/usr/local/bin/moodle-service.sh start
+ExecStart=/usr/local/bin/moodle-service.sh attach
+
+ExecStop=/usr/local/bin/moodle-service.sh stop cleanup
+ExecStopPost=/usr/local/bin/moodle-service.sh cleanup
+
+[Install]
+WantedBy=multi-user.target
+
